@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin page</title>
+</head>
+<body>
+<h1>This is Admin page</h1>
+<h2>Users</h2>
+<table style="width:60%" border="1">
+    <tr>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Age</th>
+        <th>Email</th>
+        <th>Username</th>
+        <th>Roles</th>
+        <th colspan="2">Operations</th>
+    </tr>
+
+    <tr th:each="user : ${allUsers}">
+        <td th:utext="${user.getFirstName}">Name</td>
+        <td th:utext="${user.getLastName}">Surname</td>
+        <td th:utext="${user.getAge}">Age</td>
+        <td th:utext="${user.getEmail}">Email</td>
+        <td th:utext="${user.getUsername}">Username</td>
+        <td th:utext="${user.getRolesToString}">Roles</td>
+        <td><a th:href="@{/admin/edit/{id}(id=${user.getId})}">Update</a></td>
+        <td><a th:href="@{/admin/delete/{id}(id=${user.getId})}">Delete</a></td>
+    </tr>
+</table>
+
+<br>
+<form th:method="GET" th:action="@{/admin/add}">
+    <input type="submit" value="Add user"/>
+</form>
+<br>
+<form th:method="GET" th:action="@{/logout}">
+    <input type="submit" value="Logout"/>
+</form>
+
+</body>
+</html>
