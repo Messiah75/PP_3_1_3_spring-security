@@ -35,6 +35,15 @@
         <input type="password" th:field="*{password}" id="password"/>
         <span style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
         <br>
+        <label for="roles">Roles:
+            <input th:type="checkbox" name="roles" id="roles"
+                    th:each="role : ${allRoles}"
+                    th:utext="${role.toString()}"
+                    th:value="${role.id}"
+                    th:field="*{roles}">
+        </label>
+        <span style="color: red" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}"></span>
+        <br>
         <input type="submit" value="Add"/>
     </div>
 </form>

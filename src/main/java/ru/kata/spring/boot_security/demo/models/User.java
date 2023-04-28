@@ -12,11 +12,10 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "user_id")
     private long id;
 
     @Column(name = "first_name")
-    @NotEmpty(message = "Name shouldn't be empty")
     @Size(min = 2, max = 100, message = "Name should be between 1 and 100 symbols")
     private String firstName;
 
@@ -41,7 +40,8 @@ public class User {
     @NotEmpty(message = "Password shouldn't be empty")
     private String password;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                CascadeType.REFRESH, CascadeType.DETACH}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -156,13 +156,6 @@ public class User {
                 ", username='" + username + '\'' +
                 ", role=" + roles +
                 '}';
-    }
-
-    public void addRole(Role role) {
-        if (this.roles == null) {
-            this.roles = new HashSet<>();
-        }
-        this.roles.add(role);
     }
 
     public StringJoiner getRolesToString() {

@@ -4,7 +4,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
 import java.util.List;
@@ -17,12 +16,9 @@ public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final RoleRepository roleRepository;
-
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -33,7 +29,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void saveUser(User user) {
-        user.addRole(roleRepository.getById(1L));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
@@ -49,12 +44,7 @@ public class UserServiceImpl implements UserService {
     public void updateUser(User user) {
         Optional<User> userFromDB = userRepository.findById(user.getId());
         String newPassword = user.getPassword();
-        String currentPassword = "";
-
-        if (userFromDB.isPresent()) {
-            currentPassword = userFromDB.get().getPassword();
-            user.setRoles(userFromDB.get().getRoles());
-        }
+        String currentPassword = userFromDB.get().getPassword();
 
         if (!currentPassword.equals(newPassword)) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
